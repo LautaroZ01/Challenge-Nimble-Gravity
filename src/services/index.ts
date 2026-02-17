@@ -2,6 +2,7 @@ import api from "../lib/axios";
 import type { ApplicationPayload, Position, User } from "../types";
 
 export async function getUser(): Promise<User> {
+    // Este campo NO debe estar hardcodeado, pero por ahora lo dejamos asi para el challenge
     const email = "lautarozule80@gmail.com";
 
     try {
