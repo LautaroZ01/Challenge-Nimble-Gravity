@@ -10,15 +10,17 @@ export const PositionItem = ({ position, user }: { position: Position; user: Use
         repoUrl: ""
     }
 
-    const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues })
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({ defaultValues })
 
     const { mutate, isPending } = useMutation({
         mutationFn: applyToPosition,
         onSuccess: () => {
             toast.success("Application submitted successfully")
+            reset()
         },
         onError: (error) => {
             toast.error(error.message)
+            reset()
         }
     })
 
