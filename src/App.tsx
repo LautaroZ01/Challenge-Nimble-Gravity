@@ -1,34 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useQuery } from "@tanstack/react-query"
+import { getUser } from "./services"
+import { PositionsList } from "./components/PositionsList"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { data: user, isLoading, error } = useQuery({
+    queryKey: ["user"],
+    queryFn: getUser
+  })
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen text-gray-500">Loading...</div>
+  }
+
+  if (error) {
+    return <div className="flex items-center justify-center min-h-screen text-red-500">Error: {error.message}</div>
+  }
+
+  if (user) return (
+    <div className="min-h-screen bg-gray-50 py-10 px-4">
+      <div className="w-full md:max-w-4xl lg:max-w-7xl mx-auto space-y-8">
+        <header className="text-center space-y-2">
+          <h1 className="text-4xl font-bold text-gray-900">Job Applications</h1>
+          <p className="text-gray-600">
+            Welcome, <span className="font-medium text-gray-900">{user.firstName} {user.lastName}</span> ({user.email})
+          </p>
+        </header>
+
+        <main>
+          <PositionsList user={user} />
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
